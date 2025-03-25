@@ -32,3 +32,14 @@ class PostPermission(permissions.BasePermission):
         if view.action in ['update', 'partial_update', 'destroy']:  # برای ویرایش یا حذف
             return obj.author == request.user  # فقط نویسنده پست می‌تواند آن را ویرایش یا حذف کند
         return True
+    
+
+class CommentPermission(permissions.BasePermission):
+    """
+    - فقط نویسنده‌ی کامنت می‌تواند آن را ویرایش یا حذف کند.
+    - کاربران دیگر فقط امکان مشاهده دارند.
+    """
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:  
+            return True
+        return obj.author == request.user  # فقط نویسنده می‌تواند تغییر دهد.
